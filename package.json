@@ -1,0 +1,42 @@
+{
+    "name": "express-router-plugin",
+    "version": "0.0.1",
+    "description": "Custom Express Router with Integrated Rate Limiting and Middlewares",
+    "main": "./dist/index.js",
+    "scripts": {
+        "test": "jest"
+    },
+    "keywords": [
+        "express",
+        "router",
+        "custom-router",
+        "plugin",
+        "rate-limiting",
+        "middleware",
+        "TeamSM",
+        "@TeamSM",
+        "@TeamSM/MeetBhingradiya"
+    ],
+    "author": "Meet Bhingradiya",
+    "license": "MIT",
+    "dependencies": {
+        "express": "^4.18.2",
+        "express-rate-limit": "^7.1.0"
+    },
+    "devDependencies": {
+        "@types/express": "^4.17.18",
+        "@types/node": "^20.8.2",
+        "typescript": "^5.2.2"
+    },
+    "files": [
+        "README.md",
+        "CHANGELOG.md",
+        "dist",
+        "package.json",
+        "license"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/MeetBhingradiya/express-router-plugin.git"
+    }
+}
