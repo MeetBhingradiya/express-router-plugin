@@ -33,7 +33,13 @@ const AppRouter = new Router();
 // ? Initialize the router with your preferred configurations
 AppRouter.Init({
     // ? Enable Error Handler in Controllers default: false
-    InbuildErrorHandler: true
+    InbuildErrorHandler: true,
+
+    // ? Enable Direct Express Router default: false
+    useDirectExpress: true,
+
+    // ? Enable Rate Limiting default: false
+    ApplyDefaultRateLimit: true
 })
 
 // ? Create a new route with your preferred configurations
@@ -61,10 +67,10 @@ AppRoute.createRoute({
 });
 
 // ? Execute the router
-app.use(AppRoute.Execute());
+AppRouter.Execute(app); // OR app.use(AppRouter.Execute());
 
 // ? Start the express server
-app.listen(3000);
+app.listen(8080);
 ```
 
 ## Contributing

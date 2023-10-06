@@ -1,4 +1,4 @@
-import { Router as _Router, Request, Response, NextFunction } from "express";
+import { Router as _Router, Request, Response, NextFunction, Express } from "express";
 import RateLimit, { RateLimitRequestHandler, Options as RateLimit_Options } from "express-rate-limit";
 
 type Controller = (req: Request, res: Response, next?: NextFunction) => void | Promise<void>;
@@ -16,11 +16,15 @@ interface Init_Config {
     /**
      * + `useDirectExpress` is used to directly use the express app instead executing the router manually
      */
-    // useDirectExpress?: boolean;
+    useDirectExpress?: boolean;
     /**
      * + `InbuildErrorHandler` is a used for handling errors in the controller so server doesn't crash
      */
     InbuildErrorHandler?: boolean;
+    /**
+     * + `ApplyDefaultRateLimit` is used to apply rate limit on all the routes by default if not specified in the route
+     */
+    ApplyDefaultRateLimit?: boolean;
 }
 
 function useController(Controller: Controller): Controller {
@@ -84,8 +88,9 @@ class AppRouter {
     public router: _Router;
 
     // ? Config Options
-    // private useDirectExpress: boolean = false;
+    private useDirectExpress: boolean = false;
     private InbuildErrorHandler: boolean = false;
+    private ApplyDefaultRateLimit: boolean = false;
 
     constructor() {
         this.router = _Router();
@@ -101,9 +106,13 @@ class AppRouter {
 
     Init(Config?: Init_Config): void {
         if (Config) {
-            // if (Config.useDirectExpress) {
-            //     this.useDirectExpress = Config.useDirectExpress;
-            // }
+            if (Config.useDirectExpress) {
+                this.useDirectExpress = Config.useDirectExpress;
+            }
+
+            if (Config.ApplyDefaultRateLimit) {
+                this.ApplyDefaultRateLimit = Config.ApplyDefaultRateLimit;
+            }
 
             if (Config.InbuildErrorHandler) {
                 this.InbuildErrorHandler = Config.InbuildErrorHandler;
@@ -122,16 +131,24 @@ class AppRouter {
         const limiter = LimitPreset ? LimitPreset() : this.applyRateLimit(LimitOptions);
         const middlewares = this.applyMiddleware(Middleware);
         const Controller = this.InbuildErrorHandler ? useController(controller) : controller;
-
-        this.router[method](endpoint, ...middlewares, limiter, Controller);
+        if(this.ApplyDefaultRateLimit) {
+            this.router[method](endpoint, ...middlewares, limiter, Controller);
+        } else {
+            this.router[method](endpoint, ...middlewares, Controller);
+        }
     }
 
-    Execute(): _Router {
-        // if (this.useDirectExpress) {
-        //     return app.use(this.router);
-        // } else {
+    Execute(app?: Express): _Router {
+        if (this.useDirectExpress) {
+            if(app) {
+                return app.use(this.router);
+            } else {
+                console.error("[Express-Router-Plugin] (ERROR) Express App is not defined !");
+                return this.router;
+            }
+        } else {
             return this.router;
-        // }
+        }
     }
 }
 

@@ -1,10 +1,11 @@
 {
     "name": "express-router-plugin",
-    "version": "0.0.1",
+    "version": "2.0.2",
     "description": "Custom Express Router with Integrated Rate Limiting and Middlewares",
     "main": "./dist/index.js",
     "scripts": {
-        "test": "jest"
+        "test": "jest",
+        "build": "rimraf build && tsc"
     },
     "keywords": [
         "express",
@@ -31,7 +32,7 @@
     "files": [
         "README.md",
         "CHANGELOG.md",
-        "dist",
+        "build",
         "package.json",
         "license"
     ],
