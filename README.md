@@ -1,8 +1,16 @@
 # Express Router Plugin
 
-Custom Express Router with Integrated Rate Limiting and Middlewares.
+Custom Express Router with Integrated Rate Limiting and Presets.
+
+## Features
++ Integrated Rate Limiting
++ Integrated Error Handler
++ Oranized Routes
++ Easy to use
 
 ## Installation
+
+Run the following command to install the package:
 
 ```bash
 yarn add express-router-plugin
@@ -24,61 +32,170 @@ bun add express-router-plugin
 ## Usage
 
 ```ts
-import express from 'express';
-import { Router } from 'express-router-plugin';
+import Express from 'express';
 
-const app = express();
+// ? Import Router from express-router-plugin package
+import Router from 'express-router-plugin';
+// ? or
+// import { Router } from 'express-router-plugin';
+// ? or
+// import { AppRouter } from 'express-router-plugin';
+
+const app = Express();
+
+/**
+ * ? Create a new instance of AppRouter
+ */
 const AppRouter = new Router();
 
-// ? Initialize the router with your preferred configurations
 AppRouter.Init({
-    // ? Enable Error Handler in Controllers default: false
-    InbuildErrorHandler: true,
+    // ? Apply Default RateLimit to all routes in the AppRouter only if you want default false
+    ApplyDefaultRateLimit: false,
 
-    // ? Enable Direct Express Router default: false
-    useDirectExpress: true,
-
-    // ? Enable Rate Limiting default: false
-    ApplyDefaultRateLimit: true
-})
-
-// ? Create a new route with your preferred configurations
-AppRoute.createRoute({
-    // ? Endpoint is directly passed to express router
-    endpoint: '/test',
-
-    // ? Method currently supports get, post, put, delete only
-    method: 'get',
-
-    // ? Middlewares are passed as an array
-    controller: (req, res) => {
-        res.send({
-            message: 'Hello World',
-        });
-    },
-
-    // ? Rate Limiting Options are passed as an object to `express-rate-limit` package
-    LimitOptions: {
-        limit: 5,
-        windowMs: 1000 * 60 * 60 * 24,
-        message: 'You have reached your limit for today.',
-        statusCode: 429,
-    },
+    // ? Apply Inbuild Error Handler to all routes in the AppRouter only if you want default true
+    inbuild_error_handler: true
 });
 
-// ? Execute the router
-AppRouter.Execute(app); // OR app.use(AppRouter.Execute());
+/**
+ * ? Create a new route not RateLimite
+ */
+AppRouter.CreateRoute({
+    // ? Endpoint of the route
+    endpoint: "/",
 
-// ? Start the express server
-app.listen(8080);
+    // ? Method of the route  ! Currently only supports get, post, put, delete
+    method: "get",
+
+    // ? Middleware of the route
+    Middleware: [],
+
+    // ? Controller of the route
+    controller: (req, res) => {
+        res.send("Hello World");
+    }
+    // ? LimitOptions of the route
+    // LimitOptions: {},
+
+    // ? LimitPreset of the route
+    // LimitPreset: LimitPresets._1Min
+});
+
+/**
+ * ? Execute the AppRouter
+ */
+AppRouter.Execute(app); // ? or app.use("/<Your Endpoint>" , AppRouter.Execute());
+
+// ? Express Server Listen
+app.listen(3000, () => {
+    console.log("Server Started at http://localhost:3000");
+})
+
+module.exports = app;
 ```
 
 ## Documentation
 
+### AppRouter.Init()
++ `ApplyDefaultRateLimit` - Apply Default RateLimit that set by `express-rate-limit` package to all routes in the AppRouter only if you want default false
++ `inbuild_error_handler` - Apply Inbuild Error Handler to all routes in the AppRouter only if you want default true
+
+### AppRouter.CreateRoute()
++ `endpoint` - Endpoint of the route
++ `method` - Method of the route  ! Currently only supports get, post, put, delete
++ `Middleware` - Add Middlewares to the route
++ `controller` - Controller of the route
++ `LimitOptions` - LimitOptions that is directly passed to `express-rate-limit` package
++ `LimitPreset` - used to use pre-made presets of RateLimit that is created from `Create_Limit_Preset` function
+
+```ts
+import Express from 'express';
+import Router from 'express-router-plugin';
+
+const app = Express();
+const AppRouter = new Router();
+
+// ...Configs
+
+AppRouter.CreateRoute({
+    endpoint: "/",
+    method: "get",
+    Middleware: [],
+    controller: (req, res) => {
+        res.send("Hello World");
+    }
+    // LimitOptions: {},
+    // LimitPreset: LimitPresets._1Min
+});
+
+// ...More Routes
+```
+
+
+### AppRouter.Execute()
++ `app` - Express App Instance
+
+```ts
+import Express from 'express';
+import Router from 'express-router-plugin';
+
+const app = Express();
+const AppRouter = new Router();
+
+// ...Routers and Configs
+
+// ! Only one time use in the whole project other wise RateLimit conflicts occurs in the app
+AppRouter.Execute(app);
+
+// ? OR
+
+// ! Recommended to use this method to avoid RateLimit Conflicts
+app.use("/<Your Endpoint>" , AppRouter.Execute());
+
+// ...Express Server Listen
+```
+
+### Create_Limit_Preset()
++ This function is used to create presets of RateLimit that is exported from `express-rate-limit` package
++ please refer to [express-rate-limit](https://www.npmjs.com/package/express-rate-limit) for more details
+
+```ts
+// ? Limit Presets
+const LimitPresets = {
+    _15Min: Create_Limit_Preset({
+        windowMs: 15 * 60 * 1000,
+        max: 5 * 15,
+        message: "Too many requests, please try again after 15 minutes"
+    }),
+    _1Min: Create_Limit_Preset({
+        windowMs: 1 * 60 * 1000,
+        max: 5,
+        message: "Too many requests, please try again after 1 minute"
+    }),
+    _2Hour: Create_Limit_Preset({
+        windowMs: 2 * 60 * 60 * 1000,
+        max: 10,
+        message: "Too many requests, please try again after 2 hours"
+    }),
+}
+```
+
++ Upper Presets are Directly used in `AppRouter.CreateRoute()` function
+
+```ts
+AppRouter.CreateRoute({
+    endpoint: "/",
+    method: "get",
+    Middleware: [],
+    controller: (req, res) => {
+        res.send("Hello World");
+    }
+    LimitPreset: LimitPresets._1Min
+});
+```
 
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a pull request or open an issue if you find any problems or have suggestions for improvements.
 
 ## License
-This project is licensed under the `MIT` License - see the [LICENSE](./LICENSE) file for details.
+This project is licensed under the `MIT` License - see the [LICENSE](./License) file for details.

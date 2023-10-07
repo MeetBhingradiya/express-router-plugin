@@ -1,11 +1,11 @@
 {
     "name": "express-router-plugin",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "description": "Custom Express Router with Integrated Rate Limiting and Middlewares",
     "main": "./build/index.js",
     "scripts": {
         "test": "jest",
-        "build": "rimraf build && tsc"
+        "build": "yarn add rimraf && rimraf build && tsc && yarn remove rimraf"
     },
     "keywords": [
         "express",
