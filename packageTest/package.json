@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
-    "express-router-plugin": "^0.0.2",
+    "express-router-plugin": "../",
     "typescript": "^5.2.2"
   }
 }

@@ -1,5 +1,5 @@
-const express = require('express');
-const { Router } = require('express-router-plugin');
+import express from 'express';
+import { Router } from 'express-router-plugin';
 
 const App = express();
 const AppRouter = new Router();
@@ -25,3 +25,5 @@ App.use(AppRouter.Execute());
 App.listen(3000, () => {
     console.log('Server is listening on port 3000!');
 });
+
+module.exports = App;

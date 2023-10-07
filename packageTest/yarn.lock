@@ -110,22 +110,11 @@ express-rate-limit@^7.1.0:
   resolved "https://registry.yarnpkg.com/express-rate-limit/-/express-rate-limit-7.1.0.tgz#0942f76e78a5089fd3e24ef0a1a81c7e4ad2a92b"
   integrity sha512-pwKOMedrpJJeINON/9jhAa18udV2qwxPZSoklPZK8pmXxUyE5uXaptiwjGw8bZILbxqfUZ/p8pQA99ODjSgA5Q==
 
-express-router-plugin@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/express-router-plugin/-/express-router-plugin-0.0.1.tgz#ac27bb996bad31ad617cb2969b7f34c03d6eb4b8"
-  integrity sha512-d2RH7P+qFjkJxEUWjwxq1Dc9BhSxbWnA+lUA+jSZnof4lBjQv7Z7J3VOMr1od0W+QuOjyiGfiq/Ka1RIoVzHJA==
+express-router-plugin@../:
+  version "2.0.2"
   dependencies:
     express "^4.18.2"
     express-rate-limit "^7.1.0"
-
-express-router-plugin@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/express-router-plugin/-/express-router-plugin-0.0.2.tgz#0f9b39343b7d70a6bc382a5018f93b66490ebf2b"
-  integrity sha512-/AH1xifG9gA9ea8oM+DMKGmUNiQiGZxAOZJqTDry3PmV0AIJ0P22GObwPdCZsTyEovoRlAoaS1YjqI3epUmM+A==
-  dependencies:
-    express "^4.18.2"
-    express-rate-limit "^7.1.0"
-    express-router-plugin "^0.0.1"
 
 express@^4.18.2:
   version "4.18.2"
