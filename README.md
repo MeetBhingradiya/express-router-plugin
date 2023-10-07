@@ -95,6 +95,9 @@ module.exports = app;
 
 ## Documentation
 
+>## Priorities Limit Configs
+> + `LimitOptions` > `LimitPreset` > `GlobalRateLimit` > `DefaultLimits` > `No RateLimit`
+
 ### AppRouter.Init()
 + `ApplyDefaultRateLimit` - Apply Default RateLimit that set by `express-rate-limit` package to all routes in the AppRouter only if you want default false
 + `inbuild_error_handler` - Apply Inbuild Error Handler to all routes in the AppRouter only if you want default true

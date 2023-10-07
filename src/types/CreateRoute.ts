@@ -6,7 +6,7 @@ interface CreateRoute_Type {
     Middleware?: Controller_Type[];
     controller: Controller_Type;
     LimitOptions?: RateLimit_Options_Optimised;
-    LimitPreset?: () => RateLimitRequestHandler;
+    LimitPreset?: RateLimitRequestHandler;
 }
 
 export {

@@ -1,3 +1,5 @@
+import { RateLimitRequestHandler, RateLimit_Options_Optimised } from ".";
+
 interface Config_Type {
     /**
      * + `use_inbuild_express_module_for_routing` is used to use the inbuild express module for routing you need to only listen to the port
@@ -15,6 +17,13 @@ interface Config_Type {
      * +  default value is `false`
      */
     ApplyDefaultRateLimit?: boolean;
+
+    /**
+     * + `GlobalRateLimit` is used to apply rate limit on all the routes by default if not specified in the route
+     * +  default value is `undefined`
+     * +  Limit Priority: `LimitOptions` > `LimitPreset` > `GlobalRateLimit` > `DefaultLimits`
+     */
+    GlobalRateLimit?: RateLimit_Options_Optimised | undefined;
 }
 
 export {

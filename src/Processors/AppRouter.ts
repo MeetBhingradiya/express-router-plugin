@@ -10,6 +10,7 @@ class AppRouter {
     private Config: Config_Type = {
         inbuild_error_handler: true,
         ApplyDefaultRateLimit: false,
+        GlobalRateLimit: undefined
     }
 
     constructor() {
@@ -30,7 +31,7 @@ class AppRouter {
      * + `Not Required` to use this function
      * @param Config Config_Type
      */
-    public Init (Config: Config_Type): void {
+    public Init(Config: Config_Type): void {
         if (Config) {
             this.Config = {
                 ...this.Config,
@@ -54,21 +55,30 @@ class AppRouter {
         LimitOptions = {},
         LimitPreset
     }: CreateRoute_Type): void {
-        const RateLimit_Instance = LimitPreset ? LimitPreset() : this.applyRateLimit(LimitOptions);
+        const Apply_RateLimit_Instance = () => {
+            if (LimitPreset) {
+                this.Router.use(endpoint, LimitPreset);
+                return;
+            }
+            if (Object.keys(LimitOptions).length > 0) {
+                this.Router.use(endpoint, this.applyRateLimit(LimitOptions));
+                return;
+            }
+            if (this.Config.GlobalRateLimit) {
+                this.Router.use(this.applyRateLimit(this.Config.GlobalRateLimit));
+                return;
+            }
+            if (this.Config.ApplyDefaultRateLimit) {
+                this.Router.use(RateLimit());
+                return;
+            }
+        }
+
+        Apply_RateLimit_Instance();
         const Middlewares = this.applyMiddleware(Middleware);
         const Controller = this.Config.inbuild_error_handler ? useController(controller) : controller;
 
-        if (this.Config.ApplyDefaultRateLimit) {
-            this.Router.use(RateLimit_Instance);
-
-            this.Router[method](endpoint, ...Middlewares, Controller);
-        } else {
-            if(Object.keys(LimitOptions).length > 0 || LimitPreset) {
-                this.Router.use(RateLimit_Instance);
-            }
-
-            this.Router[method](endpoint, ...Middlewares, Controller);
-        }
+        this.Router[method](endpoint, ...Middlewares, Controller);
     }
 
     /**
