@@ -10,7 +10,8 @@ class AppRouter {
     private Config: Config_Type = {
         inbuild_error_handler: true,
         ApplyDefaultRateLimit: false,
-        GlobalRateLimit: undefined
+        GlobalRateLimit: undefined,
+        SafeMode: false
     }
 
     constructor() {
@@ -58,17 +59,23 @@ class AppRouter {
         const Apply_RateLimit_Instance = () => {
             if (LimitPreset) {
                 this.Router.use(endpoint, LimitPreset);
-                return;
+
+                if(!this.Config.SafeMode) {
+                    return;
+                }
             }
             if (Object.keys(LimitOptions).length > 0) {
                 this.Router.use(endpoint, this.applyRateLimit(LimitOptions));
-                return;
+
+                if(!this.Config.SafeMode) {
+                    return;
+                };
             }
             if (this.Config.GlobalRateLimit) {
                 this.Router.use(this.applyRateLimit(this.Config.GlobalRateLimit));
                 return;
             }
-            if (this.Config.ApplyDefaultRateLimit) {
+            if (this.Config.ApplyDefaultRateLimit && !this.Config.GlobalRateLimit && !(Object.keys(LimitOptions).length > 0) && !LimitPreset) {
                 this.Router.use(RateLimit());
                 return;
             }
@@ -88,8 +95,12 @@ class AppRouter {
      * @param app 
      * @returns 
      */
-    public Execute(app?: Express): Express | _Route {
-        return app ? app.use(this.Router) : this.Router;
+    public Execute(app?: Express, endpoint?: string): Express | _Route {
+        if (endpoint) {
+            return app ? app.use(endpoint, this.Router) : this.Router;
+        } else {
+            return app ? app.use(this.Router) : this.Router;
+        }
     }
 }
 

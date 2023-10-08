@@ -2,6 +2,10 @@
 
 Custom Express Router with Integrated Rate Limiting and Presets.
 
+## Table of Contents
++ [Documentation](#documentation)
++ [New Documentation Soon!](https://meetbhingradiya.notion.site/ec5b42bc7d2749a0a5d7bb6d4a8cc609?v=f19bf64528ee47cfb87e3b49f819d51c&pvs=4)
+
 ## Features
 + Integrated Rate Limiting
 + Integrated Error Handler
