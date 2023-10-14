@@ -10,6 +10,7 @@ Custom Express Router with Integrated Rate Limiting and Presets.
 + Integrated Rate Limiting
 + Integrated Error Handler
 + Oranized Routes
++ SafeMode to Create Global RateLimit
 + Easy to use
 
 ## Installation
@@ -57,7 +58,25 @@ AppRouter.Init({
     ApplyDefaultRateLimit: false,
 
     // ? Apply Inbuild Error Handler to all routes in the AppRouter only if you want default true
-    inbuild_error_handler: true
+    inbuild_error_handler: true,
+
+    // ? SafeMode & Create Global RateLimit
+    GlobalRateLimit: {
+        // ? windowMs: 15 * 60 * 1000,
+        // ? max: 100,
+        // ? message: "Too many requests, please try again after 15 minutes"
+        // ? ...Rest of the options are same as `express-rate-limit` package
+    },
+
+    // ? SafeMode
+    // ? SafeMode is used to change `Priorities Limit Configs` Order
+    // ? SafeMode Order : `GlobalRateLimit` > `LimitOptions` > `LimitPreset` > `DefaultLimits` > `No RateLimit`
+    SafeMode: true,
+
+    // ? Global Request Timeout : Used to set timeout for all routes in the AppRouter
+    // ? Default : Not Set (No Timeout)
+    // ? This option is time validation supported so you can use more complex time like 1d, 1h, 1m, 1s, 1ms like JWT package
+    GlobalTimeout: "10s"
 });
 
 /**
@@ -82,6 +101,11 @@ AppRouter.CreateRoute({
 
     // ? LimitPreset of the route
     // LimitPreset: LimitPresets._1Min
+
+    // ? Request Timeout : Used to set timeout for this route
+    // ? Default : Not Set (No Timeout)
+    // ? This option is time validation supported so you can use more complex time like 1d, 1h, 1m, 1s, 1ms like JWT package
+    // Timeout: "10s"
 });
 
 /**

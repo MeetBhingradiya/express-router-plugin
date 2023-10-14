@@ -1,58 +1,201 @@
-import express, {Request, Response, NextFunction} from "express";
-
+import express, { Request, Response, NextFunction } from "express";
+import AppRouter, { CreateRoute_Type, Config_Type, Create_Limit_Preset } from "express-router-plugin";
 const app = express();
 
-const Config = {
-    Presets: {
-        _1Min: {
-            windowMs: 60 * 1000,
-            max: 9,
-            handler: (req:Request, res:Response, next:NextFunction) => {
-                res.send({
-                    status: 0,
-                    Message: `[Preset 1MIN] You Have Exceeded The Limit of Requests Per Minute. Please Try Again After 1 Minute.`,
-                    StatusCode: 429,
-                })
-            },
-        },
-        _15Min: {
-            windowMs: 15 * 60 * 1000,
-            max: 5 * 15,
-            handler: (req:Request, res:Response, next:NextFunction) => {
-                res.send({
-                    status: 0,
-                    Message: `You Have Exceeded The Limit of Requests Per 15 Minutes. Please Try Again After 15 Minutes.`,
-                    StatusCode: 429,
-                })
-            },
-        },
-        _1Hr: {
-            windowMs: 60 * 60 * 1000,
-            max: 5 * 60,
-            handler: (req:Request, res:Response, next:NextFunction) => {
-                res.send({
-                    status: 0,
-                    Message: `You Have Exceeded The Limit of Requests Per Hour. Please Try Again After 1 Hour.`,
-                    StatusCode: 429,
-                })
-            },
-        },
-        _1Day: {
-            windowMs: 24 * 60 * 60 * 1000,
-            max: 5 * 60 * 24,
-            handler: (req:Request, res:Response, next:NextFunction) => {
-                res.send({
-                    status: 0,
-                    Message: `You Have Exceeded The Limit of Requests Per Day. Please Try Again After 1 Day.`,
-                    StatusCode: 429,
-                })
-            },
-        },
+interface Test_Type {
+    name: string | AppRouter
+    description: Array<string> | string
+    URL?: string
+    endpoint: string
+    Options?: {
+        Init?: Config_Type
+        Routes?: Array<CreateRoute_Type>
     }
 }
 
-export default Config;
+const Tests: Array<Test_Type> = [
+    {
+        name: "Basic Router",
+        endpoint: "/Test1",
+        description: [
+            "Basic Router",
+        ],
+        Options: {
+            Routes: [
+                {
+                    endpoint: "/",
+                    method: "get",
+                    controller: (req: Request, res: Response) => {
+                        res.send({
+                            Status: 1,
+                            Message: "Test1",
+                            StatusCode: 200
+                        })
+                    },
+                }
+            ]
+        }
+    },
+    {
+        name: "Anti ERROR Router",
+        endpoint: "/Test2",
+        description: [
+            "ERROR Boundaries in Controller",
+        ],
+        Options: {
+            Init: {
+                inbuild_error_handler: true
+            },
+            Routes: [
+                {
+                    endpoint: "/",
+                    method: "get",
+                    controller: (req: Request, res: Response) => {
+                        throw new Error("Test2");
+                    },
+                }
+            ]
+        }
+    },
+    {
+        name: "Middleware Router",
+        endpoint: "/Test3",
+        description: [
+            "Middleware Router",
+        ],
+        Options: {
+            Routes: [
+                {
+                    endpoint: "/",
+                    method: "get",
+                    Middleware: [
+                        (req: Request, res: Response, next: NextFunction) => {
+                            console.log("[Log] Middleware 1 from Test3");
+                            next();
+
+                            return;
+                        },
+                    ],
+                    controller: (req: Request, res: Response) => {
+                        res.send({
+                            Status: 1,
+                            Message: "Test3",
+                            StatusCode: 200
+                        })
+                    },
+                }
+            ]
+        }
+    },
+    {
+        name: "Global RateLimit Router",
+        endpoint: "/Test4",
+        description: [
+            "RateLimit Router",
+            "Global RateLimit",
+        ],
+        Options: {
+            Init: {
+                GlobalRateLimit: {
+                    windowMs: 5000,
+                    max: 1,
+                    handler: (req: Request, res: Response) => {
+                        res.send({
+                            Status: 0,
+                            Message: "Too Many Requests",
+                            StatusCode: 429
+                        })
+                    }
+                }
+            },
+            Routes: [
+                {
+                    endpoint: "/",
+                    method: "get",
+                    controller: (req: Request, res: Response) => {
+                        res.send({
+                            Status: 1,
+                            Message: "Test4",
+                            StatusCode: 200
+                        })
+                    },
+                }
+            ]
+        }
+    },
+    {
+        name: "RateLimit Route",
+        endpoint: "/Test5",
+        description: [
+            "RateLimit Router",
+            "Route RateLimit",
+        ],
+        Options: {
+            Routes: [
+                {
+                    endpoint: "/",
+                    method: "get",
+                    LimitOptions: {
+                        windowMs: 5000,
+                        max: 1,
+                        handler: (req: Request, res: Response) => {
+                            res.send({
+                                Status: 0,
+                                Message: "Too Many Requests",
+                                StatusCode: 429
+                            })
+                        }
+                    },
+                    controller: (req: Request, res: Response) => {
+                        res.send({
+                            Status: 1,
+                            Message: "Test5",
+                            StatusCode: 200
+                        })
+                    },
+                }
+            ]
+        }
+    },
+    {
+        name: "RateLimit Preset",
+        endpoint: "/Test6",
+        description: [
+            "RateLimit Router",
+            "Preset RateLimit",
+        ],
+        Options: {
+            Routes: [
+                {
+                    endpoint: "/",
+                    method: "get",
+                    LimitPreset: Create_Limit_Preset({
+                        windowMs: 5000,
+                        max: 1,
+                        handler: (req: Request, res: Response) => {
+                            res.send({
+                                Status: 0,
+                                Message: "Too Many Requests",
+                                StatusCode: 429
+                            })
+                        }
+                    }),
+                    controller: (req: Request, res: Response) => {
+                        res.send({
+                            Status: 1,
+                            Message: "Test6",
+                            StatusCode: 200
+                        })
+                    },
+                }
+            ]
+        }
+    }
+]
+
+
+
 export {
-    Config,
-    app
+    app,
+    Tests
 }

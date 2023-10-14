@@ -1,47 +1,29 @@
-import Router from 'express-router-plugin';
-import {
-    Config,
-    app
-} from './Config';
+import { app, Tests } from "./Config";
+import Router from "express-router-plugin";
 
-const AppRouter = new Router();
-
-AppRouter.Init({
-    ApplyDefaultRateLimit: false,
-    inbuild_error_handler: true,
-    GlobalRateLimit: {
-        windowMs: 60 * 1000,
-        max: 5,
-        handler: (req, res, next) => {
-            res.send({
-                status: 0,
-                Message: `[Global Preset] You Have Exceeded The Limit of Requests Per Minute. Please Try Again After 1 Minute.`,
-                StatusCode: 429,
-            })
-        },
-    },
-});
-
-AppRouter.CreateRoute({
-    endpoint: "/get",
-
-    method: "get",
-
-    Middleware: [],
-
-    controller: (req, res) => {
-        res.send("Hello World");
-    },
-    LimitOptions: {
-        ...Config.Presets._1Min
+Tests.forEach((Test) => {
+    const Name = Test.name;
+    Test.name = new Router();
+    const AppRouter: Router = Test.name;
+    
+    if (Test.Options?.Init) {
+        AppRouter.Init(Test.Options.Init);
     }
-    // LimitPreset: Config.Presets._1Min
-});
+    console.log(`[SM E-R-P] ${Name}`);
 
-AppRouter.Execute(app);
+    if (Test.Options?.Routes) {
+        Test.Options.Routes.forEach((Route) => {
+            AppRouter.CreateRoute(Route);
+            console.log(`[SM E-R-P] ${Name} - http://localhost:3000${Test.endpoint}${Route.endpoint}`)
+        })
+    }
+
+    app.use(Test.endpoint, AppRouter.Execute());
+})
+
 
 app.listen(3000, () => {
-    console.log("Server Started at http://localhost:3000");
+    console.log("[SM E-R-P] [SERVER] http://localhost:3000");
 })
 
 module.exports = app;

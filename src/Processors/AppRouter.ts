@@ -1,7 +1,8 @@
-import { Config_Type, CreateRoute_Type, RateLimit_Options_Optimised, Controller_Type } from "../types";
+import { Config_Type, CreateRoute_Type, RateLimit_Options_Optimised, Middleware_Type } from "../types";
 import { useController } from ".";
 import { Router as _Route, Express } from "express";
 import RateLimit, { RateLimitRequestHandler } from "express-rate-limit";
+import Timeout from "connect-timeout";
 
 class AppRouter {
     private Router: _Route;
@@ -11,14 +12,15 @@ class AppRouter {
         inbuild_error_handler: true,
         ApplyDefaultRateLimit: false,
         GlobalRateLimit: undefined,
-        SafeMode: false
+        SafeMode: false,
+        GlobalTimeout: undefined
     }
 
     constructor() {
         this.Router = _Route();
     }
 
-    private applyMiddleware(middleware: Controller_Type[]): Controller_Type[] {
+    private applyMiddleware(middleware: Middleware_Type[]): Middleware_Type[] {
         return middleware;
     }
 
@@ -54,20 +56,21 @@ class AppRouter {
         Middleware = [],
         controller,
         LimitOptions = {},
-        LimitPreset
+        LimitPreset,
+        TimeOut
     }: CreateRoute_Type): void {
         const Apply_RateLimit_Instance = () => {
             if (LimitPreset) {
                 this.Router.use(endpoint, LimitPreset);
 
-                if(!this.Config.SafeMode) {
+                if (!this.Config.SafeMode) {
                     return;
                 }
             }
             if (Object.keys(LimitOptions).length > 0) {
                 this.Router.use(endpoint, this.applyRateLimit(LimitOptions));
 
-                if(!this.Config.SafeMode) {
+                if (!this.Config.SafeMode) {
                     return;
                 };
             }
@@ -81,7 +84,22 @@ class AppRouter {
             }
         }
 
+        const TimeOut_Instance = () => {
+            if(TimeOut) {
+                this.Router.use(endpoint, Timeout(TimeOut));
+
+                if (!this.Config.SafeMode) {
+                    return;
+                }
+            }
+    
+            if (this.Config.GlobalTimeout) {
+                this.Router.use(Timeout(this.Config.GlobalTimeout));
+            }
+        }
+
         Apply_RateLimit_Instance();
+        TimeOut_Instance();
         const Middlewares = this.applyMiddleware(Middleware);
         const Controller = this.Config.inbuild_error_handler ? useController(controller) : controller;
 

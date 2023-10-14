@@ -1,4 +1,4 @@
-import { RateLimit_Options_Optimised } from ".";
+import { RateLimit_Options_Optimised, TimeString_Type } from ".";
 
 interface Config_Type {
     /**
@@ -25,6 +25,13 @@ interface Config_Type {
      * + Limit Priority: `GlobalRateLimit` > `LimitPreset` > `LimitOptions` > `DefaultLimits`
      */
     SafeMode?: boolean;
+
+    /**
+     * + `GlobalTimeout` is used to apply timeout on all the routes by default if not specified in the route
+     * + default value is `undefined`
+     * + @deprecated Not Available on This Version Update to use this
+     */
+    GlobalTimeout?: TimeString_Type
 }
 
 export {
