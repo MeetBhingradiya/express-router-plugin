@@ -7,6 +7,7 @@
 
 | Version | Support Available |
 | ------- | -----------------------------  |
+| 2.3.0   | ✅ Verifyed for Production |
 | 2.2.0   | ✅ Verifyed for Production |
 | 2.1.0   | ⭕ Partially Verifyed for Production |
 | 2.0.3   | ❌ Not Verifyed for Production |
