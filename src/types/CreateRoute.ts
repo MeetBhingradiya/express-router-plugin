@@ -5,8 +5,8 @@ type TimeString_Type = string | number
 interface CreateRoute_Type {
     endpoint: string | Array<string>;
     method: "get" | "post" | "put" | "delete";
-    Middleware?: Middleware_Type[];
     controller: Controller_Type;
+    Middleware?: Middleware_Type[];
     LimitOptions?: RateLimit_Options_Optimised;
     LimitPreset?: RateLimitRequestHandler;
     

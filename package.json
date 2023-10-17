@@ -1,6 +1,6 @@
 {
     "name": "express-router-plugin",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "description": "Custom Express Router with Integrated Rate Limiting and Middlewares",
     "main": "./build/index.js",
     "scripts": {
@@ -9,19 +9,24 @@
     },
     "keywords": [
         "express",
+        "express-router",
+        "express-router-plugin",
         "router",
         "custom-router",
+        "router-plugin",
         "plugin",
         "rate-limiting",
         "middleware",
+        "middlewares",
+
         "TeamSM",
+        "MeetBhingradiya",
         "@TeamSM",
         "@TeamSM/MeetBhingradiya"
     ],
     "author": "Meet Bhingradiya",
     "license": "MIT",
     "dependencies": {
-        "connect-timeout": "^1.9.0",
         "express": "^4.18.2",
         "express-rate-limit": "^7.1.0"
     },

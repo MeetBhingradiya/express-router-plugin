@@ -1,4 +1,4 @@
-import { RateLimit_Options_Optimised, TimeString_Type } from ".";
+import { Middleware_Type, RateLimit_Options_Optimised, TimeString_Type } from ".";
 
 interface Config_Type {
     /**
@@ -32,6 +32,13 @@ interface Config_Type {
      * + @deprecated Not Available on This Version Update to use this
      */
     GlobalTimeout?: TimeString_Type
+
+    /**
+     * + `GlobalMiddleware` is used to apply middleware on all the routes by default if not specified in the route
+     * + default value is `undefined`
+     * + @deprecated Not Available on This Version Update to use this
+     */
+    GlobalMiddleware?: Middleware_Type[]
 }
 
 export {

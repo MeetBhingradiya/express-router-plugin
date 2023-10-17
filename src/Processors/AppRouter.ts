@@ -2,7 +2,6 @@ import { Config_Type, CreateRoute_Type, RateLimit_Options_Optimised, Middleware_
 import { useController } from ".";
 import { Router as _Route, Express } from "express";
 import RateLimit, { RateLimitRequestHandler } from "express-rate-limit";
-import Timeout from "connect-timeout";
 
 class AppRouter {
     private Router: _Route;
@@ -12,8 +11,7 @@ class AppRouter {
         inbuild_error_handler: true,
         ApplyDefaultRateLimit: false,
         GlobalRateLimit: undefined,
-        SafeMode: false,
-        GlobalTimeout: undefined
+        SafeMode: false
     }
 
     constructor() {
@@ -56,8 +54,7 @@ class AppRouter {
         Middleware = [],
         controller,
         LimitOptions = {},
-        LimitPreset,
-        TimeOut
+        LimitPreset
     }: CreateRoute_Type): void {
         const Apply_RateLimit_Instance = () => {
             if (LimitPreset) {
@@ -84,22 +81,7 @@ class AppRouter {
             }
         }
 
-        const TimeOut_Instance = () => {
-            if(TimeOut) {
-                this.Router.use(endpoint, Timeout(TimeOut));
-
-                if (!this.Config.SafeMode) {
-                    return;
-                }
-            }
-    
-            if (this.Config.GlobalTimeout) {
-                this.Router.use(Timeout(this.Config.GlobalTimeout));
-            }
-        }
-
         Apply_RateLimit_Instance();
-        TimeOut_Instance();
         const Middlewares = this.applyMiddleware(Middleware);
         const Controller = this.Config.inbuild_error_handler ? useController(controller) : controller;
 
