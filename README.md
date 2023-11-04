@@ -1,4 +1,5 @@
 # Express Router Plugin
+### Latest Version : 2.4.0 🛹 [![npm version](https://badge.fury.io/js/express-router-plugin.svg)](https://badge.fury.io/js/express-router-plugin)
 
  A custom Express Router that integrates `seamlessly` with rate limiting and middlewares. This plugin simplifies the process of creating `organized routes` in your Express.js applications. It also provides `built-in error handling` for route controllers and `integrated rate limiting` for enhanced security. The Express Router Plugin is `easy to use` and can be integrated into existing Express applications with minimal effort.
 
@@ -8,10 +9,9 @@
 + [Usage](#usage)
 + [Priorities Limit Configs](#priorities-limit-configs)
 + [Documentation](#documentation)
++ [Advanced Docs](https://meetbhingradiya.notion.site/ec5b42bc7d2749a0a5d7bb6d4a8cc609?v=f19bf64528ee47cfb87e3b49f819d51c&pvs=4)
 + [Contributing](#contributing)
 + [License](#license)
-
-+ [Soon! (Notion Wiki)](https://meetbhingradiya.notion.site/ec5b42bc7d2749a0a5d7bb6d4a8cc609?v=f19bf64528ee47cfb87e3b49f819d51c&pvs=4)
 
 ## Features
 + **Integrated Rate Limiting:** Set rate limits for your routes effortlessly.
@@ -70,13 +70,14 @@ AppRouter.Init({
     // This is change priority of RateLimit Configs so GlobalRateLimit is top priority and LimitOptions is bottom priority default LimitOptions is top priority and GlobalRateLimit is bottom priority
     SafeMode: true,
 
-
-
-    // Soon !  Not Added Yet 
+    // Global Middlewares that is applied to all routes in the AppRouter
     GlobalMiddlewares: [
         // ... Global Middlewares
     ],
+    
+    // Soon !  Not Added Yet 
     GlobalTimeout: 10000,
+    ApplyDefaultTimeout: false, // ? Default Timeout is 10000ms or 10s
 });
 
 // Create routes
@@ -86,6 +87,9 @@ AppRouter.CreateRoute({
     controller: (req, res) => {
         res.send("Hello World");
     }
+    // Middleware: [
+    //  Middleware1,
+    // ],
     // LimitOptions: {},
     // LimitPreset: LimitPresets._1Min
 });
@@ -101,7 +105,7 @@ app.listen(3000, () => {
 module.exports = app;
 ```
 ## Priorities Limit Configs
-> **`LimitOptions` > `LimitPreset` > `GlobalRateLimit` > `DefaultLimits` > `No RateLimit`**
+> **`LimitPreset` > `LimitOptions` > `GlobalRateLimit` > `DefaultLimits` > `No RateLimit`**
 
 1. **`LimitPreset`** - Rate limit presets created with `Create_Limit_Preset` function have the `highest` priority. If a route specifies a LimitPreset, it will be used as the rate limit configuration for that route.
 
@@ -121,7 +125,7 @@ By following this order of priority, you can effectively tailor the rate limitin
 + `ApplyDefaultRateLimit` - (boolean, default: **false**): Apply a default rate limit to all routes in the AppRouter. If set to true, the default rate limit will be applied to all routes unless overridden by a specific route setting.
 + `inbuild_error_handler` - (boolean, default: **true**): Apply the built-in error handler to all routes in the AppRouter. If set to true, the built-in error handler will be applied to all routes unless overridden by a specific route setting.
 + `GlobalRateLimit` - (RateLimitOptions, default: **undefined**): Set a global rate limit for all routes in the AppRouter. If set, this rate limit will be applied to all routes unless overridden by a specific route setting.
-+ `SafeMode` - (boolean, default: **true**): Set the priority of rate limit configurations. If set to **true**, the priority order will be: `GlobalRateLimit > DefaultLimits > LimitPreset > LimitOptions > No RateLimit`. [Learn More](#priorities-limit-configs)
++ `SafeMode` - (boolean, default: **true**): Set the priority of rate limit configurations. If set to **true**, the priority order will be: `GlobalRateLimit > LimitPreset > LimitOptions > DefaultLimits > No RateLimit`. [Learn More](#priorities-limit-configs)
 
 Example:
 
@@ -142,6 +146,11 @@ AppRouter.Init({
         message: "Too many requests, please try again after 15 minutes"
     },
     SafeMode: true
+    GlobalMiddlewares: [
+        Middleware1,
+        Middleware2,
+        // ... Global Middlewares
+    ],
 });
 
 // ...Create Routes
@@ -166,6 +175,9 @@ AppRouter.CreateRoute({
     controller: (req, res) => {
         res.send("Hello World");
     }
+    // Middleware: [
+    //  Middleware1,
+    // ],
     // LimitOptions: {},
     // LimitPreset: LimitPresets._1Min
 });

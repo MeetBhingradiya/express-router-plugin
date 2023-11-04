@@ -190,6 +190,39 @@ const Tests: Array<Test_Type> = [
                 }
             ]
         }
+    },
+    {
+        name: "Global Middleware Router",
+        endpoint: "/Test7",
+        description: [
+            "Middleware Router",
+            "Global Middleware",
+        ],
+        Options: {
+            Init: {
+                GlobalMiddleware: [
+                    (req: Request, res: Response, next: NextFunction) => {
+                        console.log("[Log] Middleware 1 from Test7");
+                        next();
+
+                        return;
+                    },
+                ]
+            },
+            Routes: [
+                {
+                    endpoint: "/",
+                    method: "get",
+                    controller: (req: Request, res: Response) => {
+                        res.send({
+                            Status: 1,
+                            Message: "Test7",
+                            StatusCode: 200
+                        })
+                    },
+                }
+            ]
+        }
     }
 ]
 

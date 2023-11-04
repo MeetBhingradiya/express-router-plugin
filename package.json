@@ -1,6 +1,6 @@
 {
     "name": "express-router-plugin",
-    "version": "2.3.0",
+    "version": "2.4.0",
     "description": "Custom Express Router with Integrated Rate Limiting and Middlewares",
     "main": "./build/index.js",
     "scripts": {
@@ -18,7 +18,6 @@
         "rate-limiting",
         "middleware",
         "middlewares",
-
         "TeamSM",
         "MeetBhingradiya",
         "@TeamSM",

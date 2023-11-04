@@ -11,7 +11,8 @@ class AppRouter {
         inbuild_error_handler: true,
         ApplyDefaultRateLimit: false,
         GlobalRateLimit: undefined,
-        SafeMode: false
+        SafeMode: false,
+        GlobalMiddleware: undefined,
     }
 
     constructor() {
@@ -24,6 +25,12 @@ class AppRouter {
 
     private applyRateLimit(limitOptions: RateLimit_Options_Optimised): RateLimitRequestHandler {
         return RateLimit(limitOptions);
+    }
+
+    private applyGlobalMiddleware(): void {
+        if (this.Config.GlobalMiddleware) {
+            this.Router.use(this.applyMiddleware(this.Config.GlobalMiddleware));
+        }
     }
 
     /**
@@ -81,6 +88,7 @@ class AppRouter {
             }
         }
 
+        this.applyGlobalMiddleware();
         Apply_RateLimit_Instance();
         const Middlewares = this.applyMiddleware(Middleware);
         const Controller = this.Config.inbuild_error_handler ? useController(controller) : controller;
