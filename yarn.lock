@@ -101,6 +101,11 @@
     "@types/mime" "*"
     "@types/node" "*"
 
+"@types/timestring@^6.0.5":
+  version "6.0.5"
+  resolved "https://registry.yarnpkg.com/@types/timestring/-/timestring-6.0.5.tgz#c86722529e65febebe4f830ecb5307e687c72c4a"
+  integrity sha512-u+PDTI30Ezg81ENLYTIezc2HtBW7n2/Vgt3vJ2LBzpn/VZzVj33MqxXeVti7g16gPzn3i1hSZCkNCveWp5iowQ==
+
 accepts@~1.3.8:
   version "1.3.8"
   resolved "https://registry.yarnpkg.com/accepts/-/accepts-1.3.8.tgz#0bf0be125b67014adcb0b0921e62db7bffe16b2e"

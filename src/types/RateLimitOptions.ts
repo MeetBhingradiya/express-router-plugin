@@ -11,13 +11,6 @@ interface RateLimit_Options_Optimised {
     skipFailedRequests?: RateLimit_Options["skipFailedRequests"]
     message?: RateLimit_Options["message"]
     statusCode?: RateLimit_Options["statusCode"]
-    /**
-     * @deprecated
-     */
-    headers?: RateLimit_Options["headers"]
-    /**
-     * @deprecated
-     */
     max?: RateLimit_Options["max"]
     requestWasSuccessful?: RateLimit_Options["requestWasSuccessful"]
     validate?: RateLimit_Options["validate"]
@@ -25,6 +18,13 @@ interface RateLimit_Options_Optimised {
     requestPropertyName?: RateLimit_Options["requestPropertyName"]
     standardHeaders?: RateLimit_Options["standardHeaders"]
     legacyHeaders?: RateLimit_Options["legacyHeaders"]
+    /**
+     * @deprecated use `lagacyHeaders` instead
+     */
+    headers?: RateLimit_Options["headers"]
+    /**
+     * @deprecated use `limit` instead
+     */
 }
 
 export {

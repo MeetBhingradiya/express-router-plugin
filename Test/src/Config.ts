@@ -200,7 +200,7 @@ const Tests: Array<Test_Type> = [
         ],
         Options: {
             Init: {
-                GlobalMiddleware: [
+                GlobalMiddlewares: [
                     (req: Request, res: Response, next: NextFunction) => {
                         console.log("[Log] Middleware 1 from Test7");
                         next();
@@ -219,6 +219,53 @@ const Tests: Array<Test_Type> = [
                             Message: "Test7",
                             StatusCode: 200
                         })
+                    },
+                }
+            ]
+        }
+    },
+    {
+        name: "Multiple Endpoint Router",
+        endpoint: "/Test8",
+        description: [
+            "Multiple Endpoint Router",
+        ],
+        Options: {
+            Routes: [
+                {
+                    endpoint: ["/1", "/2"],
+                    method: "get",
+                    controller: (req: Request, res: Response) => {
+                        res.send({
+                            Status: 1,
+                            Message: "Test8",
+                            StatusCode: 200
+                        })
+                    },
+                }
+            ]
+        }
+    },
+    {
+        name: "Timeout Router",
+        endpoint: "/Test9",
+        description: [
+            "Timeout Router",
+        ],
+        Options: {
+            Routes: [
+                {
+                    endpoint: "/",
+                    method: "get",
+                    Timeout: "5s",
+                    controller: (req: Request, res: Response) => {
+                        setTimeout(() => {
+                            res.send({
+                                Status: 1,
+                                Message: "Test9",
+                                StatusCode: 200
+                            })
+                        }, 10000);
                     },
                 }
             ]

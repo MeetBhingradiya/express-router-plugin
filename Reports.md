@@ -1,9 +1,11 @@
 # Express Router Plugin Version Testing Reports
+
 + `✅` Passed
 + `⭕` Not Tested
 + `❌` Failed
 
 ## Version 2.4.0
+
 + Basic Router Functionality - ✅
 + Middleware Functionality - ✅
 + Limit Option Functionality - ✅
@@ -16,6 +18,7 @@
 + Global Middleware Functionality - ✅
 
 ## Version 2.3.0
+
 + Basic Router Functionality - ✅
 + Middleware Functionality - ✅
 + Limit Option Functionality - ✅
@@ -27,6 +30,7 @@
 + Safe Mode - ✅
 
 ## Version 2.2.0
+
 + Basic Router Functionality - ✅
 + Middleware Functionality - ✅
 + Limit Option Functionality - ✅
@@ -38,6 +42,7 @@
 + Safe Mode - ✅
 
 ## Version 2.1.0
+
 + Basic Router Functionality - ✅
 + Middleware Functionality - ⭕
 + Limit Option Functionality - ✅
